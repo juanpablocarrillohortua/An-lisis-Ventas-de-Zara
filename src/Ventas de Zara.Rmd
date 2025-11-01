@@ -1,0 +1,71 @@
+---
+title: "Ventas de Zara, TALLER 1 DE PROCESOS DE RStudio"
+author: Juan Pablo Carrillo Hortua, Julian David Rodríguez Ramírez, Juan Esteban Acosta Morales, grupo MAP203
+  
+date: '01-11-2025'
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    collapsed: true
+    smooth_scroll: true
+    theme: journal
+    highlight: kate
+    df_print: paged
+    code_folding: show
+---
+### Preparando el entorno de trabajo
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+df <- read_delim("../data/Zara_sales_EDA.csv", delim = ";", col_names = TRUE)
+```
+
+# Exploración básica del **DataFrame**
+
+```{r}
+head(df)
+```
+
+
+## Identificación de columnas de la base de datos
+
+```{r}
+cat(colnames(df), sep = ", ")
+dim(df)
+```
+
+Nótese que el **DataFrame** tiene **17 columnas y 20,252 observaciones**, lo cual representa una muestra sustancial y suficiente para estimar los parámetros de la población. Consultando la documentación del conjunto de datos disponible en [Kaggle](https://www.kaggle.com/datasets/marixe/zara-sales-for-eda), se identifica el significado y tipo de dato para cada variable.  
+
+
+
+
+\n\n
+| Variable        | Type         | Description                                                                                                          |
+|-----------------|--------------|----------------------------------------------------------------------------------------------------------------------|
+| Product ID      | Integer      | Identificador único para cada producto. Valores secuenciales que cubren entradas originales y sobremuestreadas.     |
+| Product Position| Categorical  | Ubicación del producto en la tienda (por ejemplo, Aisle, End-cap o Front of Store).                                  |
+| Promotion       | Categorical (Yes/No) | Indica si el producto estuvo incluido en una promoción o descuento.                                 |
+| Product Category| Categorical  | Categoría general del producto.                                                                                      |
+| Seasonal        | Categorical (Yes/No) | Indica si el artículo pertenece a una colección limitada o de temporada.                            |
+| Season          | Categorical  | Temporada lógica: Spring, Summer, Autumn o Winter. Asignada a partir de palabras clave en el nombre o descripción (por ejemplo, jacket/coat = Winter). |
+| Sales Volume    | Integer      | Número aproximado de unidades vendidas (o demanda estimada) por producto; útil para análisis de tendencias y regresión. |
+| brand           | Categorical  | Marca del producto.                                                                                                 |
+| url             | Text         | Enlace sintético pero realista del producto, creado combinando la URL base de Zara con un nombre de producto adaptado. |
+| name            | Text         | Nombre del producto tal como aparece en la tienda en línea (por ejemplo, Slim Fit Suit Jacket).                     |
+| description     | Text         | Breve descripción del producto (diseño/ajuste/características).                                                     |
+| price           | Float        | Precio de venta al público (USD), estandarizado según los rangos típicos de Zara.                                   |
+| currency        | Text         | Código de moneda del precio (principalmente USD).                                                                   |
+| terms           | Categorical  | Palabra clave/subcategoría del artículo usada para agrupar (por ejemplo, jackets, shoes, sweaters, jeans, t-shirts). |
+| section         | Categorical  | Sección de la tienda a la que pertenece el artículo (por ejemplo, WOMAN, MAN).                                      |
+| material        | Categorical  | Material principal de la prenda (por ejemplo, Polyester, Cotton, Wool Blend).                                       |
+| origin          | Categorical  | País de fabricación o suministro (por ejemplo, China, Bangladesh, Cambodia, Turkey).                                |
+\n\n
+
+Es crucial recalcar la importancia de la variable **currency** para comparar los precios de prendas; todas deben ser dolares.En la limpieza de datos se realizará la conversión de las divisas al dólar
+\n\n
+
+La columna url tampoco tiene mayor uso estadístico, por lo que se considera acertado eliminarla.
+
+
