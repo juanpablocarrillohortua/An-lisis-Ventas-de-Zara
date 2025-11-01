@@ -63,9 +63,41 @@ Nótese que el **DataFrame** tiene **17 columnas y 20,252 observaciones**, lo cu
 | origin          | Categorical  | País de fabricación o suministro (por ejemplo, China, Bangladesh, Cambodia, Turkey).                                |
 \n\n
 
-Es crucial recalcar la importancia de la variable **currency** para comparar los precios de prendas; todas deben ser dolares.En la limpieza de datos se realizará la conversión de las divisas al dólar
+Es crucial recalcar la importancia de la variable **currency** para comparar los precios de prendas; todas deben ser dolares.En la limpieza de datos se realizará la conversión de las divisas al dólar.
 \n\n
 
 La columna url tampoco tiene mayor uso estadístico, por lo que se considera acertado eliminarla.
 
 
+## Identificación de datos nulos
+
+```{r}
+sapply(df, function(x) any(is.na(x)))
+```
+
+Vea que las columnas con Valores nulos son **name** y **description** a continuación se valora la cantidad de valores nulos para seleccionar una estrategia de limpieza.     
+
+```{r rows.print= 17}
+data.frame(
+  columna = names(df),
+  tiene_NA = sapply(df, function(x) any(is.na(x))),
+  total_NA = colSums(is.na(df))
+)
+```
+
+Notese que el numero de valores nulos en cada columna es basicamente insignificante, por lo que se selecciona como la estrategia mas adecuada la eliminacion de estas observaciones.
+
+```{r}
+df <- na.omit(df)
+
+any(is.na(df$name))
+any(is.na(df$description))
+```
+
+Observe como las 2 columnas que tenian valores nulos ya se encuentran totalmente limpias.
+
+```{r}
+dim(df)
+
+```
+Tan solo 2 filas fueron eliminadas.
